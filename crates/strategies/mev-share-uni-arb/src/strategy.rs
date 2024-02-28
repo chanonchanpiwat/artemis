@@ -89,11 +89,13 @@ impl<M: Middleware + 'static, S: Signer + 'static> Strategy<Event, Action>
                 info!("Received mev share event: {:?}", event);
                 // skip if event has no logs
                 if event.logs.is_empty() {
+                    info!("is empty \n");
                     return vec![];
                 }
                 let address = event.logs[0].address;
                 // skip if address is not a v3 pool
                 if !self.pool_map.contains_key(&address) {
+                    info!("contain no key \n");
                     return vec![];
                 }
                 // if it's a v3 pool we care about, submit bundles

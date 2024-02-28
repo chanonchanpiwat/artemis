@@ -8,11 +8,12 @@ use artemis_core::{
     types::{CollectorMap, ExecutorMap},
 };
 use clap::Parser;
+use dotenv::dotenv;
 use ethers::{
     prelude::MiddlewareBuilder,
     providers::{Provider, Ws},
     signers::{LocalWallet, Signer},
-    types::Address,
+    types::{Address, H160},
 };
 use mev_share_uni_arb::{
     strategy::MevShareUniArb,
@@ -49,7 +50,14 @@ async fn main() -> Result<()> {
         .with(filter)
         .init();
 
-    let args = Args::parse();
+    dotenv().ok();
+
+    let args = Args {
+        wss: dotenv::var("WSS_URL").expect("expect wss_url"),
+        private_key: dotenv::var("PRIVATE_KEY").expect("expect private_key"),
+        flashbots_signer: dotenv::var("SIGNING_KEY").expect("expect flash_bot signer_key"),
+        arb_contract_address: dotenv::var("BOT_ADDRESS").expect("expect bot_address").parse::<H160>().expect("unable to parse"),
+    };
 
     //  Set up providers and signers.
     let ws = Ws::connect(args.wss).await?;

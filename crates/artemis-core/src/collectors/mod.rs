@@ -15,3 +15,6 @@ pub mod mempool_collector;
 pub mod opensea_order_collector;
 
 pub mod mevshare_collector;
+
+// this collector mock stream of block
+pub mod back_test_collector;
